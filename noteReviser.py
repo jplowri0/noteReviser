@@ -1,4 +1,5 @@
 import os
+import pyperclip
 
 def grep_search(root_path, search_string):
     for root, _, files in os.walk(root_path):
@@ -12,11 +13,20 @@ def grep_search(root_path, search_string):
                         print("File Contents:")
                         with open(file_path, 'r', encoding='utf-8') as f:
                             print(f.read())
-                        choice = input("\nPress 'N' to move to the next file, or any other key to continue: ")
-                        if choice.lower() == 'n':
-                            continue
-                        else:
-                            return
+                        
+                        while True:
+                            choice = input("\nPress 'N' to move to the next file, 'SC' to copy the file name to the clipboard, 'Q' to quit, or any other key to continue: ").strip().upper()
+                            
+                            if choice == 'N':
+                                break
+                            elif choice == 'SC':
+                                filename = os.path.splitext(file_name)[0] # Remove file extension
+                                pyperclip.copy(filename)
+                                print(f"File name '{filename}' copied to clipboard.")
+                            elif choice == 'Q':
+                                return
+                            else:
+                                return
             except UnicodeDecodeError:
                 print("\nUnable to read:", file_path, "- File is not encoded in UTF-8")
 
