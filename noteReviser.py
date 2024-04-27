@@ -44,8 +44,24 @@ def grep_search(root_path, search_string):
                 print("\nUnable to read:", file_path, "- File is not encoded in UTF-8")
 
 def main():
-    root_path = input("Enter the root directory path to start searching: ")
-    search_string = input("Enter the string to search: ")
+    filepath = "filepath.txt"
+    if os.path.exists(filepath):
+        with open(filepath, 'r') as file:
+            root_path = file.read().strip()
+    else:
+        root_path = input("Enter the root directory path to start searching: ")
+    
+    while True:
+        search_choice = input("Press '1' to search for 'NOT_REVIEWED' automatically or press '2' to enter your own search string: ").strip()
+        if search_choice == '1':
+            search_string = "NOT_REVIEWED"
+            break
+        elif search_choice == '2':
+            search_string = input("Enter the search string: ")
+            break
+        else:
+            print("Invalid choice. Please enter '1' or '2'.")
+    
     grep_search(root_path, search_string)
 
 if __name__ == "__main__":
