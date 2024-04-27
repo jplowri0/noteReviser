@@ -1,21 +1,28 @@
 import os
 import pyperclip
 
+def remove_not_reviewed(file_path):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        content = file.read()
+    content = content.replace("NOT_REVIEWED", "")
+    with open(file_path, 'w', encoding='utf-8') as file:
+        file.write(content)
+
 def grep_search(root_path, search_string):
     for root, _, files in os.walk(root_path):
         for file_name in files:
             file_path = os.path.join(root, file_name)
             try:
                 with open(file_path, 'r', encoding='utf-8') as file:
-                    if search_string in file.read():
+                    content = file.read()
+                    if search_string in content:
                         print("\nFile Name:", file_name)
                         print("File Location:", file_path)
                         print("File Contents:")
-                        with open(file_path, 'r', encoding='utf-8') as f:
-                            print(f.read())
+                        print(content)
                         
                         while True:
-                            choice = input("\nPress 'N' to move to the next file, 'SC' to copy the file name to the clipboard, 'Q' to quit, or any other key to continue: ").strip().upper()
+                            choice = input("\nPress 'N' to move to the next file, 'SC' to copy the file name to the clipboard, 'S' to remove 'NOT_REVIEWED' from the file, 'Q' to quit, or any other key to continue: ").strip().upper()
                             
                             if choice == 'N':
                                 break
@@ -23,6 +30,12 @@ def grep_search(root_path, search_string):
                                 filename = os.path.splitext(file_name)[0] # Remove file extension
                                 pyperclip.copy(filename)
                                 print(f"File name '{filename}' copied to clipboard.")
+                            elif choice == 'S':
+                                if "NOT_REVIEWED" in content:
+                                    remove_not_reviewed(file_path)
+                                    print("Removed 'NOT_REVIEWED' from the file.")
+                                else:
+                                    print("'NOT_REVIEWED' not found in the file.")
                             elif choice == 'Q':
                                 return
                             else:
